@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillMatrix | AI Career Intelligence Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 5rem;
+        }
+
+        .navbar {
+            padding: 1.5rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        p { color: var(--text-muted); line-height: 1.6; }
+
+        .input-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.6rem; font-weight: 600; color: var(--text-main); opacity: 0.9; }
+        input, textarea {
+            width: 100%; padding: 0.8rem 1.2rem; background: var(--glass);
+            border: 1px solid var(--border); border-radius: 0.8rem;
+            color: white; outline: none; transition: all 0.2s;
+        }
+        input:focus, textarea:focus { border-color: var(--primary); background: rgba(255,255,255,0.08); }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; padding: 1rem 2rem; border-radius: 0.8rem;
+            border: none; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; gap: 0.8rem;
+            font-size: 1rem; transition: transform 0.2s;
+        }
+        .btn:hover { transform: scale(1.02); opacity: 0.9; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .item-card {
+            background: var(--glass); border-radius: 1.2rem;
+            border: 1px solid var(--border); overflow: hidden;
+            display: flex; flex-direction: column;
+            transition: all 0.3s;
+        }
+        .item-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+        .item-img {
+            height: 120px; background: white; 
+            display: flex; justify-content: center; align-items: center; padding: 1.5rem;
+        }
+        .item-img img { max-width: 80%; max-height: 80%; object-fit: contain; }
+
+        .item-body { padding: 1.5rem; flex: 1; }
+        .badge {
+            background: rgba(99, 102, 241, 0.1); color: var(--primary);
+            padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.7rem;
+            font-weight: 700; text-transform: uppercase;
+        }
+
+        #results-section { display: none; margin-top: 4rem; animation: fadeIn 0.8s ease; }
+        #loading-view { display: none; text-align: center; padding: 4rem; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .spinner {
+            width: 50px; height: 50px; border: 4px solid var(--primary);
+            border-top-color: transparent; border-radius: 50%;
+            animation: spin 1s linear infinite; margin: 0 auto 1.5rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <i data-lucide="briefcase"></i> SkillMatrix <span style="font-size: 0.8rem; opacity: 0.6; margin-left: 0.5rem;">[DEMO]</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero & Form -->
+        <section class="glass-card">
+            <h1>Launch Your Path.</h1>
+            <p style="margin-bottom: 2.5rem;">Fill out this demo profile to see how SkillMatrix uses AI to build your career roadmap.</p>
+            
+            <form id="demo-form">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" placeholder="e.g. Sarath Chandiran" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Target Role</label>
+                        <input type="text" placeholder="e.g. Robotics Engineer / Web Dev" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Current Skills</label>
+                    <textarea rows="3" placeholder="React, Python, ROS2, Circuit Design..."></textarea>
+                </div>
+                <button type="submit" class="btn">
+                    <i data-lucide="sparkles"></i> Generate AI Roadmap
+                </button>
+            </form>
+        </section>
+
+        <!-- Loading View -->
+        <div id="loading-view">
+            <div class="spinner"></div>
+            <h3>AI is analyzing your profile...</h3>
+            <p>Scanning global job boards and course platforms</p>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section">
+            <h2 style="font-size: 2rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.8rem;">
+                <i data-lucide="book-open" style="color: var(--primary);"></i> Your Upskilling Roadmap
+            </h2>
+            <div class="grid" id="course-grid">
+                <!-- Courses will appear here -->
+            </div>
+
+            <h2 style="font-size: 2rem; margin: 4rem 0 2rem; display: flex; align-items: center; gap: 0.8rem;">
+                <i data-lucide="target" style="color: var(--secondary);"></i> Strategic Placements
+            </h2>
+            <div class="grid" id="job-grid">
+                <!-- Jobs will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const form = document.getElementById('demo-form');
+        const loading = document.getElementById('loading-view');
+        const results = document.getElementById('results-section');
+        const courseGrid = document.getElementById('course-grid');
+        const jobGrid = document.getElementById('job-grid');
+
+        const mockCourses = [
+            { title: "Advanced Robotics with ROS2", platform: "Udemy", logo: "https://www.vectorlogo.zone/logos/udemy/udemy-ar21.svg", tags: "Robotics, Python" },
+            { title: "Mastering React 19 & Next.js", platform: "Coursera", logo: "https://upload.wikimedia.org/wikipedia/commons/9/97/Coursera-logo.png", tags: "Web Dev, UX" },
+            { title: "Embedded Systems Design", platform: "edX", logo: "https://www.vectorlogo.zone/logos/edx/edx-ar21.svg", tags: "Hardware, C++" }
+        ];
+
+        const mockJobs = [
+            { title: "Junior Robotics Developer", company: "Cyberdyne Systems", loc: "Remote", desc: "Work on next-generation warehouse Automation." },
+            { title: "Software Engineer Intern", company: "Meta", loc: "Bengaluru", desc: "Scale global infrastructure for AI-driven products." },
+            { title: "Control Systems Lead", company: "AeroTech", loc: "Chennai", desc: "Design flight control boards for experimental drones." }
+        ];
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            form.closest('.glass-card').style.opacity = '0.5';
+            loading.style.display = 'block';
+            window.scrollTo({ top: loading.offsetTop - 100, behavior: 'smooth' });
+
+            setTimeout(() => {
+                loading.style.display = 'none';
+                results.style.display = 'block';
+                form.closest('.glass-card').style.display = 'none';
+                
+                // Populate Courses
+                courseGrid.innerHTML = mockCourses.map(c => `
+                    <div class="item-card">
+                        <div class="item-img"><img src="${c.logo}"></div>
+                        <div class="item-body">
+                            <span class="badge">${c.platform}</span>
+                            <h3 style="margin-top: 0.8rem;">${c.title}</h3>
+                            <p style="font-size: 0.8rem; margin: 1rem 0;">${c.tags}</p>
+                            <button class="btn" style="width: 100%; justify-content: center; padding: 0.6rem; font-size: 0.8rem;">View Course</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Populate Jobs
+                jobGrid.innerHTML = mockJobs.map(j => `
+                    <div class="glass-card" style="padding: 1.5rem; border-left: 4px solid var(--secondary);">
+                        <div style="display: flex; justify-content: space-between;">
+                            <h3>${j.title}</h3>
+                            <span style="font-size: 0.8rem; color: var(--secondary); font-weight: 700;">${j.loc}</span>
+                        </div>
+                        <h4 style="color: var(--primary); margin-bottom: 1rem;">${j.company}</h4>
+                        <p style="font-size: 0.9rem;">${j.desc}</p>
+                    </div>
+                `).join('');
+
+                window.scrollTo({ top: results.offsetTop - 100, behavior: 'smooth' });
+            }, 2500);
+        });
+    </script>
+</body>
+</html>
